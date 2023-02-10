@@ -4,6 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 
+/**
+ * 网关
+ * @author wangjunchen
+ */
 @SpringBootApplication
 @EnableEurekaClient //开启eureka客户端依赖
 public class GatewayServerApplication {

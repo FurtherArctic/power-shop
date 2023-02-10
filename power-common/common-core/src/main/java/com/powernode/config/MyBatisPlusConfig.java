@@ -9,9 +9,10 @@ import org.springframework.context.annotation.Configuration;
 
 /**
  * 分页配置
+ * 其它工程无需再扫描mapper
+ * @author wangjunchen
  */
 @Configuration
-//其它工程无需再扫描mapper
 @MapperScan(basePackages = {"com.powernode.mapper"})
 public class MyBatisPlusConfig {
 

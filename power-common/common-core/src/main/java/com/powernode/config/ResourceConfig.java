@@ -18,6 +18,7 @@ import java.nio.charset.Charset;
 /**
  * 资源服务器
  * 作用：统一token校验
+ * @author wangjunchen
  */
 @Configuration
 @EnableResourceServer

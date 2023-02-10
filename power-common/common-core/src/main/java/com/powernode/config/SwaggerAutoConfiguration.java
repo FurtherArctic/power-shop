@@ -12,6 +12,9 @@ import springfox.documentation.service.Contact;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 
+/**
+ * @author wangjunchen
+ */
 @EnableConfigurationProperties(SwaggerProperties.class)
 @Configuration
 @EnableOpenApi // 开启swagger功能

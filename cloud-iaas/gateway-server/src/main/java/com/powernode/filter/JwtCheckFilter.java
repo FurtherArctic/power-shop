@@ -23,6 +23,7 @@ import java.util.List;
 
 /**
  * JWT全局Token校验过滤
+ * @author wangjunchen
  */
 @Component
 public class JwtCheckFilter implements GlobalFilter, Ordered {

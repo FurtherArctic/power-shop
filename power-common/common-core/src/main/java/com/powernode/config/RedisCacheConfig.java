@@ -12,13 +12,14 @@ import org.springframework.data.redis.serializer.RedisSerializer;
  * Description:
  * Date:2022/10/28 11:11
  * author:abc
+ * @author wangjunchen
  */
 @Configuration
 public class RedisCacheConfig {
 
     /**
      * 将注解式redis的值序列化为json
-     * @return
+     * @return redisCacheConfiguration;
      */
     @Bean
     public RedisCacheConfiguration redisCacheConfiguration() {

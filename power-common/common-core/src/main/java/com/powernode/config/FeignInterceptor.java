@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * feign拦截器：做一个token的传递
+ * @author wangjunchen
  */
 @Component
 public class FeignInterceptor implements RequestInterceptor {

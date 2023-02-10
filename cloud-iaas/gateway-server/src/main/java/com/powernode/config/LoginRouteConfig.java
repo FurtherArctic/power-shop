@@ -16,6 +16,7 @@ import java.time.Duration;
 /**
  * 登录的路由配置
  * 作用：把oAuth2.0颁发的token存储到redis中
+ * @author wangjunchen
  */
 @Configuration
 public class LoginRouteConfig {
