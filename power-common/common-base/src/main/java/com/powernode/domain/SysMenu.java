@@ -4,11 +4,13 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author wangjunchen
@@ -67,5 +69,7 @@ public class SysMenu implements Serializable {
     @TableField(value = "order_num")
     private Integer orderNum;
 
+    @TableField(exist = false)
+    private List<SysMenu> list;
     private static final long serialVersionUID = 1L;
 }

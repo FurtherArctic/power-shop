@@ -8,6 +8,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
  * Description:
  * Date:2022/10/27 12:04
  * author:abc
+ * @author wangjunchen
  */
 public class AuthUtil {
 
