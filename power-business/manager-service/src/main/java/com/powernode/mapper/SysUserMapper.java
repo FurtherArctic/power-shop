@@ -9,5 +9,11 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface SysUserMapper extends BaseMapper<SysUser> {
+    /**
+     * 根据用户名查询用户id
+     *
+     * @param username 用户名
+     * @return 用户id
+     */
     Long selectIdByName(String username);
 }

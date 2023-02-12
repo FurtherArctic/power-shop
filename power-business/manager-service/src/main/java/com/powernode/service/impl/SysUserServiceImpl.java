@@ -72,13 +72,16 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
                 roleIdList.forEach(roleId -> {
                     SysUserRole sysUserRole = new SysUserRole();
                     sysUserRole.setRoleId(roleId);
+                    // 由于id是数据库表中的自增字段
+                    // 如果直接使用sysUser.getUserId()方法获取用户id，此时使用此方法获取到的是空值null
+                    //因此使用根据用户名获取id
                     sysUserRole.setUserId(sysUserMapper.selectIdByName(sysUser.getUsername()));
                     sysUserRoleList.add(sysUserRole);
                 });
                 sysUserRoleService.saveBatch(sysUserRoleList);
             }
         }
-        return i>0;
+        return i > 0;
     }
 
     /**
