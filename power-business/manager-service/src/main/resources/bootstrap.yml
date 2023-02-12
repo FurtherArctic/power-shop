@@ -49,3 +49,8 @@ oss:
   accessKeyId: LTAI5t7PnRkBGUJEwuVvoozT
   accessKeySecret: PQujqR2EEg7pvMeb9Q2EcF1UVFKhQC
   bucketName: abc-shop
+  # 更新时保证字段数据不为空（当需要更新的记录某一字段数据不变时，保留原有数据，而不是替换为空值null）
+mybatis-plus:
+  global-config:
+    db-config:
+      update-strategy: not_empty

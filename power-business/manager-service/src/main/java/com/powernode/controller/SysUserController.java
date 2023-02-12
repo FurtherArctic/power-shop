@@ -50,7 +50,7 @@ public class SysUserController {
     @PostMapping
     @PreAuthorize("hasAuthority('sys:user:save')")
     public ResponseEntity<Void> saveSysUser(@RequestBody SysUser sysUser) {
-       sysUserService.save(sysUser);
+        sysUserService.save(sysUser);
         return ResponseEntity.ok().build();
     }
 
@@ -60,5 +60,13 @@ public class SysUserController {
     public ResponseEntity<SysUser> loadSysUserInfo(@PathVariable Long id) {
         SysUser sysUser = sysUserService.getById(id);
         return ResponseEntity.ok(sysUser);
+    }
+
+    @ApiOperation("修改管理员信息")
+    @PutMapping
+    @PreAuthorize("hasAuthority('sys:user:update')")
+    public ResponseEntity<Void> updateSysUser(@RequestBody SysUser sysUser) {
+        sysUserService.updateById(sysUser);
+        return ResponseEntity.ok().build();
     }
 }

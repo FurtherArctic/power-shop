@@ -13,6 +13,7 @@ import com.powernode.utils.AuthUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
@@ -104,5 +105,44 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
             sysUser.setRoleIdList(roleIdList);
         }
         return sysUser;
+    }
+
+    /**
+     * 修改管理员信息
+     *
+     * @param sysUser 实体对象
+     * @return 修改结果，boolean型
+     */
+    @Override
+    @Transactional(rollbackFor = RuntimeException.class)
+    public boolean updateById(SysUser sysUser) {
+        //如果密码框中的有值，则修改密码，没有则不变
+        String password = sysUser.getPassword();
+        //判断是否有值
+        if (StringUtils.hasText(password)) {
+            //修改密码，密码加密
+            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+            sysUser.setPassword(passwordEncoder.encode(password));
+        }
+        //删除管理员原有的角色
+        sysUserRoleMapper.delete(new LambdaQueryWrapper<SysUserRole>()
+                .eq(SysUserRole::getUserId, sysUser.getUserId())
+        );
+        //获取用户角色id集合
+        List<Long> roleIdList = sysUser.getRoleIdList();
+        //判断是否有角色
+        if (!CollectionUtils.isEmpty(roleIdList) && roleIdList.size() != 0) {
+            //新增用户角色记录
+            List<SysUserRole> sysUserRoleList = new ArrayList<>();
+            //循环遍历用户角色id集合
+            roleIdList.forEach(roleId -> {
+                SysUserRole sysUserRole = new SysUserRole();
+                sysUserRole.setRoleId(roleId);
+                sysUserRole.setUserId(sysUser.getUserId());
+                sysUserRoleList.add(sysUserRole);
+            });
+            sysUserRoleService.saveBatch(sysUserRoleList);
+        }
+        return sysUserMapper.updateById(sysUser) > 0;
     }
 }
