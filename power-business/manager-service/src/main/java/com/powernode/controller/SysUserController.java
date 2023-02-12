@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * @author wangjunchen
  */
@@ -67,6 +69,22 @@ public class SysUserController {
     @PreAuthorize("hasAuthority('sys:user:update')")
     public ResponseEntity<Void> updateSysUser(@RequestBody SysUser sysUser) {
         sysUserService.updateById(sysUser);
+        return ResponseEntity.ok().build();
+    }
+
+    /**
+     * 批量删除管理员用户，此种方法只能够删除sys_user表中的用户信息
+     * 但sys_user_role表中的用户id对应的角色信息不能删除
+     *
+     * @param ids 用户id集合
+     * @return 响应
+     */
+    @ApiOperation("批量删除管理员")
+    @DeleteMapping("{ids}")
+    @PreAuthorize("hasAuthority('sys:user:delete')")
+    public ResponseEntity<Void> deleteSysUser(@PathVariable List<Long> ids) {
+        sysUserService.removeByIds(ids);
+
         return ResponseEntity.ok().build();
     }
 }
