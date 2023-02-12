@@ -13,7 +13,6 @@ import com.powernode.utils.AuthUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
@@ -54,12 +53,11 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
      * @return 结果
      */
     @Override
-    @Transactional(rollbackFor = RuntimeException.class)
     public boolean save(SysUser sysUser) {
+        //新增管理员
         //密码加密
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         sysUser.setPassword(passwordEncoder.encode(sysUser.getPassword()));
-        //用户创建时间
         sysUser.setCreateTime(new Date());
         sysUser.setCreateUserId(Long.valueOf(AuthUtil.getLoginUserId()));
         int i = sysUserMapper.insert(sysUser);
@@ -74,13 +72,13 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
                 roleIdList.forEach(roleId -> {
                     SysUserRole sysUserRole = new SysUserRole();
                     sysUserRole.setRoleId(roleId);
-                    sysUserRole.setUserId(sysUser.getUserId());
+                    sysUserRole.setUserId(sysUserMapper.selectIdByName(sysUser.getUsername()));
                     sysUserRoleList.add(sysUserRole);
                 });
                 sysUserRoleService.saveBatch(sysUserRoleList);
             }
         }
-        return i > 0;
+        return i>0;
     }
 
     /**

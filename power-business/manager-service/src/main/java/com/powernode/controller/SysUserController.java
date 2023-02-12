@@ -50,7 +50,7 @@ public class SysUserController {
     @PostMapping
     @PreAuthorize("hasAuthority('sys:user:save')")
     public ResponseEntity<Void> saveSysUser(@RequestBody SysUser sysUser) {
-        sysUserService.save(sysUser);
+       sysUserService.save(sysUser);
         return ResponseEntity.ok().build();
     }
 
