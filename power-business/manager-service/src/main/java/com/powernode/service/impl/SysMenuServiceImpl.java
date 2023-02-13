@@ -7,6 +7,8 @@ import com.powernode.domain.SysMenu;
 import com.powernode.mapper.SysMenuMapper;
 import com.powernode.service.SysMenuService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -18,6 +20,7 @@ import java.util.stream.Collectors;
  * @author wangjunchen
  */
 @Service
+@CacheConfig(cacheNames = "com.powernode.service.impl.SysMenuServiceImpl")
 public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> implements SysMenuService {
 
     @Autowired
@@ -78,5 +81,9 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
         return root;
     }
 
-
+    @Override
+    @Cacheable( key = MenuConstant.ALL_MENU_LIST)
+    public List<SysMenu> list() {
+        return sysMenuMapper.selectList(null);
+    }
 }
