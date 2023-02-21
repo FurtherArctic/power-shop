@@ -51,4 +51,20 @@ public class CategoryController {
         categoryService.save(category);
         return ResponseEntity.ok().build();
     }
+
+    /**
+     * /prod/category/info/98,根据标识查询商品类目信息
+     *
+     * @param categoryId 分类标识id
+     * @return ResponseEntity
+     */
+    @ApiOperation("根据标识查询商品类目信息")
+    @GetMapping("info/{categoryId}")
+    @PreAuthorize("hasAuthority('prod:category:info')")
+    public ResponseEntity<Category> loadCategoryInfo(@PathVariable Long categoryId) {
+        Category category = categoryService.getById(categoryId);
+        return ResponseEntity.ok(category);
+    }
+
+
 }
