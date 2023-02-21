@@ -12,6 +12,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -24,11 +25,33 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
     @Autowired
     private CategoryMapper categoryMapper;
 
+    /**
+     * 获取所有分类
+     *
+     * @return Category集合
+     */
     @Override
     @Cacheable(key = CategoryConstant.CATEGORY_LIST)
     public List<Category> list() {
         return categoryMapper.selectList(
                 new LambdaQueryWrapper<Category>().orderByDesc(Category::getSeq)
         );
+    }
+
+    @Override
+    @Cacheable(key = CategoryConstant.CATEGORY_LIST)
+    public boolean save(Category category) {
+        //获取parent_id
+        Long parentId = category.getParentId();
+        //判断是否为一级类目
+        if (parentId == 0) {
+            category.setGrade(1);
+        } else {
+            category.setGrade(2);
+        }
+        category.setRecTime(new Date());
+        category.setUpdateTime(new Date());
+        category.setShopId(1L);
+        return categoryMapper.insert(category) > 0;
     }
 }

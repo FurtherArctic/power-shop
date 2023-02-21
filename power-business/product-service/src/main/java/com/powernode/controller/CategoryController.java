@@ -8,9 +8,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -44,5 +42,13 @@ public class CategoryController {
     public ResponseEntity<List<Category>> loadRootCategoryList() {
         List<Category> root = categoryService.list(new LambdaQueryWrapper<Category>().eq(Category::getParentId, 0));
         return ResponseEntity.ok(root);
+    }
+
+    @ApiOperation("新增商品类目")
+    @PostMapping
+    @PreAuthorize("hasAuthority('prod:category:save')")
+    public ResponseEntity<Void> saveCategory(@RequestBody Category category) {
+        categoryService.save(category);
+        return ResponseEntity.ok().build();
     }
 }
