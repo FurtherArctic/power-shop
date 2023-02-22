@@ -58,4 +58,12 @@ public class ProdTagController {
         prodTagService.updateById(prodTag);
         return ResponseEntity.ok().build();
     }
+
+    @ApiOperation("删除商品分组标签")
+    @DeleteMapping("{tagId}")
+    @PreAuthorize("hasAuthority('prod:prodTag:delete')")
+    public ResponseEntity<Void> deleteProdTag(@PathVariable Long tagId) {
+        prodTagService.removeById(tagId);
+        return ResponseEntity.ok().build();
+    }
 }
