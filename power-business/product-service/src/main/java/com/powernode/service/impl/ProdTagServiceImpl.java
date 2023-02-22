@@ -9,7 +9,7 @@ import com.powernode.domain.ProdTag;
 import com.powernode.mapper.ProdTagMapper;
 import com.powernode.service.ProdTagService;
 import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -37,7 +37,7 @@ public class ProdTagServiceImpl extends ServiceImpl<ProdTagMapper, ProdTag> impl
     }
 
     @Override
-    @Cacheable(key = TagConstant.TAG_LIST)
+    @CacheEvict(key = TagConstant.TAG_LIST)
     public boolean save(ProdTag prodTag) {
         prodTag.setProdCount(0L);
         prodTag.setShopId(1L);
@@ -45,5 +45,12 @@ public class ProdTagServiceImpl extends ServiceImpl<ProdTagMapper, ProdTag> impl
         prodTag.setCreateTime(new Date());
         prodTag.setUpdateTime(new Date());
         return prodTagMapper.insert(prodTag) > 0;
+    }
+
+    @Override
+    @CacheEvict(key = TagConstant.TAG_LIST)
+    public boolean updateById(ProdTag prodTag) {
+        prodTag.setUpdateTime(new Date());
+        return prodTagMapper.updateById(prodTag) > 0;
     }
 }

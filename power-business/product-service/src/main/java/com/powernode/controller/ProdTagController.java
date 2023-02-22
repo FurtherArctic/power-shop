@@ -37,4 +37,25 @@ public class ProdTagController {
         return ResponseEntity.ok().build();
     }
 
+    @ApiOperation("根据标识查询商品分组标签详情")
+    @GetMapping("info/{tagId}")
+    @PreAuthorize("hasAuthority('prod:prodTag:info')")
+    public ResponseEntity<ProdTag> loadProdTagInfo(@PathVariable Long tagId) {
+        ProdTag prodTag = prodTagService.getById(tagId);
+        return ResponseEntity.ok(prodTag);
+    }
+
+    /**
+     * 修改商品分组标签,所有的修改操作都要先查询再修改
+     *
+     * @param prodTag 商品分组标签
+     * @return ResponseEntity
+     */
+    @ApiOperation("修改商品分组标签")
+    @PutMapping
+    @PreAuthorize("hasAuthority('prod:prodTag:update')")
+    public ResponseEntity<Void> updateProdTag(@RequestBody ProdTag prodTag) {
+        prodTagService.updateById(prodTag);
+        return ResponseEntity.ok().build();
+    }
 }
