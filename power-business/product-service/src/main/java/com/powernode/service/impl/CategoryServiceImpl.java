@@ -12,8 +12,10 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -35,9 +37,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
     @Override
     @Cacheable(key = CategoryConstant.CATEGORY_LIST)
     public List<Category> list() {
-        return categoryMapper.selectList(
-                new LambdaQueryWrapper<Category>().orderByDesc(Category::getSeq)
-        );
+        return categoryMapper.selectList(new LambdaQueryWrapper<Category>().orderByDesc(Category::getSeq));
     }
 
     /**
@@ -75,9 +75,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
         //判断类目是否需要修改
         if (oldGrade == 1 && nowGrade == 2) {
             //1变2，查询原来一级类目下没有子类目才可变更
-            List<Category> child = categoryMapper.selectList(new LambdaQueryWrapper<Category>()
-                    .eq(Category::getParentId, oldCategory.getCategoryId())
-            );
+            List<Category> child = categoryMapper.selectList(new LambdaQueryWrapper<Category>().eq(Category::getParentId, oldCategory.getCategoryId()));
             if (!CollectionUtils.isEmpty(child) && child.size() != 0) {
                 throw new RuntimeException("不可修改");
             }
@@ -86,5 +84,21 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
             category.setParentId(0L);
         }
         return categoryMapper.updateById(category) > 0;
+    }
+
+    @Override
+    @CacheEvict(key = CategoryConstant.CATEGORY_LIST)
+    @Transactional(rollbackFor = RuntimeException.class)
+    public boolean removeById(Serializable id) {
+        //根据标识查询类目详情
+        Category category = categoryMapper.selectById(id);
+        //判断是否为1级类目
+        if (category.getGrade() == 1) {
+            //删除子类目
+            categoryMapper.delete(new LambdaQueryWrapper<Category>().eq(Category::getParentId, id));
+        }
+
+        return categoryMapper.deleteById(id) > 0;
+
     }
 }
