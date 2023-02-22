@@ -7,9 +7,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -26,8 +24,17 @@ public class ProdTagController {
     @ApiOperation("多条件分页查询分组标签列表")
     @GetMapping("page")
     @PreAuthorize("hasAuthority('prod:prodTag:page')")
-    public ResponseEntity<Page<ProdTag>> loadProdTagPage(Page<ProdTag> page,ProdTag prodTag) {
-        page=prodTagService.selectProdTagPage(page,prodTag);
+    public ResponseEntity<Page<ProdTag>> loadProdTagPage(Page<ProdTag> page, ProdTag prodTag) {
+        page = prodTagService.selectProdTagPage(page, prodTag);
         return ResponseEntity.ok(page);
     }
+
+    @ApiOperation("新增商品分组标签")
+    @PostMapping
+    @PreAuthorize("hasAuthority('prod:prodTag:save')")
+    public ResponseEntity<Void> saveProdTag(@RequestBody ProdTag prodTag) {
+        prodTagService.save(prodTag);
+        return ResponseEntity.ok().build();
+    }
+
 }
