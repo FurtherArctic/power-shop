@@ -66,5 +66,11 @@ public class CategoryController {
         return ResponseEntity.ok(category);
     }
 
-
+    @ApiOperation("修改商品类目信息")
+    @PutMapping
+    @PreAuthorize("hasAuthority('prod:category:update')")
+    public ResponseEntity<Void> updateCategory(@RequestBody Category category) {
+        categoryService.updateById(category);
+        return ResponseEntity.ok().build();
+    }
 }
