@@ -4,19 +4,21 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import java.io.Serializable;
-import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @author wangjunchen
  */
 /**
     * 商品分组表
-    */
+ * @author wangjunchen
+ */
 @Data
 @Builder
 @AllArgsConstructor
@@ -45,13 +47,13 @@ public class ProdTag implements Serializable {
      * 状态(1为正常,0为删除)
      */
     @TableField(value = "`status`")
-    private Boolean status;
+    private Integer status;
 
     /**
      * 默认类型(0:商家自定义,1:系统默认)
      */
     @TableField(value = "is_default")
-    private Boolean isDefault;
+    private Integer isDefault;
 
     /**
      * 商品数量
