@@ -32,6 +32,7 @@ public class ProdSpecController {
     /**
      * 新增商品规格，需要操作两张表，属性表中添加一条记录，属性值表中添加多条记录，因为一个属性可以对应多个属性值
      *
+     * @param prodProp 商品属性
      * @return responseEntity
      */
     @ApiOperation("新增商品规格")
@@ -39,6 +40,21 @@ public class ProdSpecController {
     @PreAuthorize("hasAuthority('prod:spec:save')")
     public ResponseEntity<Void> saveProdSpec(@RequestBody ProdProp prodProp) {
         prodPropService.save(prodProp);
+        return ResponseEntity.ok().build();
+    }
+
+    /**
+     * 修改商品规格，通常情况下每个属性对应多个属性值，如果只更改其中某几个属性值操作会过于繁琐
+     * 因此，可以先将其中原有的属性值全部删除，然后将修改后的属性值重新添加
+     *
+     * @param prodProp 商品属性
+     * @return ResponseEntity
+     */
+    @ApiOperation("修改商品规格")
+    @PutMapping
+    @PreAuthorize("hasAuthority('prod:spec:update')")
+    public ResponseEntity<Void> updateProdSpec(@RequestBody ProdProp prodProp) {
+        prodPropService.updateById(prodProp);
         return ResponseEntity.ok().build();
     }
 }

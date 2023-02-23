@@ -92,4 +92,25 @@ public class ProdPropServiceImpl extends ServiceImpl<ProdPropMapper, ProdProp> i
         }
         return i > 0;
     }
+
+    @Override
+    @CacheEvict(key = ProdSpecConstant.PROD_PROP_LIST)
+    @Transactional(rollbackFor = RuntimeException.class)
+    public boolean updateById(ProdProp prodProp) {
+        //获取商品属性id
+        Long propId = prodProp.getPropId();
+        //获取商品属性值集合
+        List<ProdPropValue> prodPropValueList = prodProp.getProdPropValues();
+        if (CollectionUtil.isEmpty(prodPropValueList) || prodPropValueList.size() == 0) {
+            throw new RuntimeException("服务器开小差了");
+        }
+        //删除原有的商品属性值集合
+        prodPropValueMapper.delete(new LambdaQueryWrapper<ProdPropValue>()
+                .eq(ProdPropValue::getPropId, propId)
+        );
+        //批量添加商品属性值集合
+        prodPropValueList.forEach(prodPropValue-> prodPropValue.setPropId(propId));
+        prodPropValueService.saveBatch(prodPropValueList);
+        return prodPropMapper.updateById(prodProp) > 0;
+    }
 }
