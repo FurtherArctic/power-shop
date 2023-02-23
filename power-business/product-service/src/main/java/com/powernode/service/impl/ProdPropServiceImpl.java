@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
+import java.io.Serializable;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -109,8 +110,18 @@ public class ProdPropServiceImpl extends ServiceImpl<ProdPropMapper, ProdProp> i
                 .eq(ProdPropValue::getPropId, propId)
         );
         //批量添加商品属性值集合
-        prodPropValueList.forEach(prodPropValue-> prodPropValue.setPropId(propId));
+        prodPropValueList.forEach(prodPropValue -> prodPropValue.setPropId(propId));
         prodPropValueService.saveBatch(prodPropValueList);
         return prodPropMapper.updateById(prodProp) > 0;
+    }
+
+    @Override
+    @CacheEvict(key = ProdSpecConstant.PROD_PROP_LIST)
+    @Transactional(rollbackFor = RuntimeException.class)
+    public boolean removeById(Serializable id) {
+        //删除属性值
+        prodPropValueMapper.delete(new LambdaQueryWrapper<ProdPropValue>().eq(ProdPropValue::getPropId, id));
+        //删除属性
+        return prodPropMapper.deleteById(id) > 0;
     }
 }
