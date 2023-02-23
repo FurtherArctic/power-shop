@@ -4,19 +4,22 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import java.io.Serializable;
-import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+import java.util.Date;
+
 /**
  * @author wangjunchen
  */
+
 /**
-    * 商品评论
-    */
+ * 商品评论
+ * @author wangjunchen
+ */
 @Data
 @Builder
 @AllArgsConstructor
@@ -87,7 +90,7 @@ public class ProdComm implements Serializable {
      * 得分，0-5分
      */
     @TableField(value = "score")
-    private Byte score;
+    private Integer score;
 
     /**
      * 有用的计数
@@ -114,10 +117,16 @@ public class ProdComm implements Serializable {
     private Integer status;
 
     /**
-     * 评价(0好评 1中评 2差评)
+     * 评价(0 好评 1中评 2差评)
      */
     @TableField(value = "evaluate")
-    private Byte evaluate;
+    private Integer evaluate;
+
+    /**
+     * 商品名称，不存在于表中
+     */
+    @TableField(exist = false)
+    private String prodName;
 
     private static final long serialVersionUID = 1L;
 }
