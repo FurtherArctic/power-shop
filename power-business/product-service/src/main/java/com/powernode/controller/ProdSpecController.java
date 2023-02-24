@@ -10,6 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @author wangjunchen
@@ -64,5 +65,20 @@ public class ProdSpecController {
     public ResponseEntity<Void> deleteProdSpec(@PathVariable Long propId) {
         prodPropService.removeById(propId);
         return ResponseEntity.ok().build();
+    }
+
+    /**
+     * 查询商品规格列表，包括商品的属性和对应的属性值
+     * 属性数量可以有很多，且不会频繁更改，因此要用到缓存
+     * 属性值通常比较少，且改动频繁，不需要添加到缓存
+     *
+     * @return prodPropList
+     */
+    @ApiOperation("查询商品规格属性集合")
+    @GetMapping("list")
+    @PreAuthorize("hasAuthority('prod:spec:page')")
+    public ResponseEntity<List<ProdProp>> loadProdPropList() {
+        List<ProdProp> prodPropList = prodPropService.list();
+        return ResponseEntity.ok(prodPropList);
     }
 }

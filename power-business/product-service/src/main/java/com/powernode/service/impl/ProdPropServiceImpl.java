@@ -14,6 +14,7 @@ import com.powernode.service.ProdPropService;
 import com.powernode.service.ProdPropValueService;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -34,7 +35,6 @@ public class ProdPropServiceImpl extends ServiceImpl<ProdPropMapper, ProdProp> i
     private ProdPropMapper prodPropMapper;
     @Resource
     private ProdPropValueMapper prodPropValueMapper;
-
     @Resource
     private ProdPropValueService prodPropValueService;
 
@@ -123,5 +123,11 @@ public class ProdPropServiceImpl extends ServiceImpl<ProdPropMapper, ProdProp> i
         prodPropValueMapper.delete(new LambdaQueryWrapper<ProdPropValue>().eq(ProdPropValue::getPropId, id));
         //删除属性
         return prodPropMapper.deleteById(id) > 0;
+    }
+
+    @Override
+    @Cacheable(key = ProdSpecConstant.PROD_PROP_LIST)
+    public List<ProdProp> list() {
+        return prodPropMapper.selectList(null);
     }
 }
