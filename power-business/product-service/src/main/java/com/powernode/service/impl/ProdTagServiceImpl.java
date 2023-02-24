@@ -10,12 +10,14 @@ import com.powernode.mapper.ProdTagMapper;
 import com.powernode.service.ProdTagService;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author wangjunchen
@@ -84,5 +86,14 @@ public class ProdTagServiceImpl extends ServiceImpl<ProdTagMapper, ProdTag> impl
     @CacheEvict(key = TagConstant.TAG_LIST)
     public boolean removeById(Serializable id) {
         return prodTagMapper.deleteById(id) > 0;
+    }
+
+    @Override
+    @Cacheable(key = TagConstant.TAG_LIST)
+    public List<ProdTag> list() {
+        return prodTagMapper.selectList(new LambdaQueryWrapper<ProdTag>()
+                .eq(ProdTag::getStatus, 1)
+                .orderByDesc(ProdTag::getSeq)
+        );
     }
 }

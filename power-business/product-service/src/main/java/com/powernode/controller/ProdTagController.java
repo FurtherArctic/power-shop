@@ -10,6 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @author wangjunchen
@@ -65,5 +66,13 @@ public class ProdTagController {
     public ResponseEntity<Void> deleteProdTag(@PathVariable Long tagId) {
         prodTagService.removeById(tagId);
         return ResponseEntity.ok().build();
+    }
+
+    @ApiOperation("查询商品分组标签")
+    @GetMapping("listTagList")
+    @PreAuthorize("hasAuthority('prod:prodTag:page')")
+    public ResponseEntity<List<ProdTag>> loadProdTagList() {
+        List<ProdTag> prodTagList = prodTagService.list();
+        return ResponseEntity.ok(prodTagList);
     }
 }
