@@ -16,6 +16,7 @@ import com.powernode.mapper.SkuMapper;
 import com.powernode.service.ProdService;
 import com.powernode.service.ProdTagReferenceService;
 import com.powernode.service.SkuService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +24,7 @@ import org.springframework.util.StringUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,6 +33,7 @@ import java.util.stream.Collectors;
  * @author wangjunchen
  */
 @Service
+@Slf4j
 public class ProdServiceImpl extends ServiceImpl<ProdMapper, Prod> implements ProdService {
     @Autowired
     private ProdMapper prodMapper;
@@ -211,5 +214,21 @@ public class ProdServiceImpl extends ServiceImpl<ProdMapper, Prod> implements Pr
         }
         prod.setUpdateTime(new Date());
         return prodMapper.updateById(prod) > 0;
+    }
+
+    @Override
+    @Transactional(rollbackFor = RuntimeException.class)
+    public boolean removeByIds(Collection<? extends Serializable> idList) {
+        //删除商品分组标签关系记录
+        prodTagReferenceMapper.delete(new LambdaQueryWrapper<ProdTagReference>()
+                .in(ProdTagReference::getProdId, idList)
+        );
+        //删除商品的sku集合
+        skuMapper.delete(new LambdaQueryWrapper<Sku>()
+                .in(Sku::getProdId, idList)
+        );
+        int i = prodMapper.deleteBatchIds(idList);
+        log.info("删除的商品数量：{}", i);
+        return i == idList.size();
     }
 }

@@ -11,6 +11,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @author wangjunchen
@@ -76,6 +77,14 @@ public class ProdController {
     @PreAuthorize("hasAuthority('prod:prod:update')")
     public ResponseEntity<Void> load(@RequestBody Prod prod) {
         prodService.updateById(prod);
+        return ResponseEntity.ok().build();
+    }
+
+    @ApiOperation("批量删除商品")
+    @DeleteMapping("{prodIds}")
+    @PreAuthorize("hasAuthority('prod:prod:delete')")
+    public ResponseEntity<Void> deleteProd(@PathVariable List<Long> prodIds) {
+        prodService.removeByIds(prodIds);
         return ResponseEntity.ok().build();
     }
 }
