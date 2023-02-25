@@ -50,4 +50,19 @@ public class ProdController {
         prodService.save(prod);
         return ResponseEntity.ok().build();
     }
+
+    /**
+     * 根据标识查询商品详情，需要查询商品分组标签的集合以及sku集合
+     *
+     * @param prodId 商品id
+     * @return responseEntity
+     */
+
+    @ApiOperation("根据标识查询商品详情")
+    @GetMapping("info/{prodId}")
+    @PreAuthorize("hasAuthority('prod:prod:info')")
+    public ResponseEntity<Prod> loadProdInfo(@PathVariable Long prodId) {
+        Prod prod = prodService.getById(prodId);
+        return ResponseEntity.ok(prod);
+    }
 }

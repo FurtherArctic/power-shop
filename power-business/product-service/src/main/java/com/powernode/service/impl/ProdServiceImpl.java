@@ -21,9 +21,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author wangjunchen
@@ -127,5 +129,31 @@ public class ProdServiceImpl extends ServiceImpl<ProdMapper, Prod> implements Pr
             }
         }
         return i > 0;
+    }
+
+    @Override
+    public Prod getById(Serializable id) {
+        //根据标识查询商品详情，此时从数据库中获取的商品详情不包括分组标签和sku信息
+        Prod prod = prodMapper.selectById(id);
+        //根据商品标识查询商品与分组标签关系集合
+        List<ProdTagReference> prodTagReferenceList = prodTagReferenceMapper.selectList(new LambdaQueryWrapper<ProdTagReference>()
+                .eq(ProdTagReference::getProdId, id)
+        );
+        if (CollectionUtil.isNotEmpty(prodTagReferenceList) && prodTagReferenceList.size() != 0) {
+            //从商品与分组标签关系集合中获取分组标签关系id集合
+            List<Long> tagIdList = prodTagReferenceList.stream().map(ProdTagReference::getTagId).collect(Collectors.toList());
+            prod.setTagList(tagIdList);
+        }
+        //根据商品标识查询商品sku对象集合
+        List<Sku> skuList = skuMapper.selectList(new LambdaQueryWrapper<Sku>()
+                .eq(Sku::getProdId, id)
+        );
+        if (CollectionUtil.isNotEmpty(skuList) && skuList.size() != 0) {
+            skuList.forEach(sku -> {
+                sku.setStocks(sku.getActualStocks());
+            });
+            prod.setSkuList(skuList);
+        }
+        return prod;
     }
 }
