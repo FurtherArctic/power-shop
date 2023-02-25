@@ -57,12 +57,25 @@ public class ProdController {
      * @param prodId 商品id
      * @return responseEntity
      */
-
     @ApiOperation("根据标识查询商品详情")
     @GetMapping("info/{prodId}")
     @PreAuthorize("hasAuthority('prod:prod:info')")
     public ResponseEntity<Prod> loadProdInfo(@PathVariable Long prodId) {
         Prod prod = prodService.getById(prodId);
         return ResponseEntity.ok(prod);
+    }
+
+    /**
+     * 修改商品信息，先删除所有属性，然后重新添加
+     *
+     * @param prod 商品信息
+     * @return responseEntity
+     */
+    @ApiOperation("修改商品信息")
+    @PutMapping
+    @PreAuthorize("hasAuthority('prod:prod:update')")
+    public ResponseEntity<Void> load(@RequestBody Prod prod) {
+        prodService.updateById(prod);
+        return ResponseEntity.ok().build();
     }
 }
