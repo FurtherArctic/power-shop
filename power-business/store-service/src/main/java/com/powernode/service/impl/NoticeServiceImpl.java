@@ -45,4 +45,11 @@ public class NoticeServiceImpl extends ServiceImpl<NoticeMapper, Notice> impleme
         }
         return noticeMapper.insert(notice) > 0;
     }
+
+    @Override
+    @CacheEvict(key = NoticeConstant.FRONT_NOTICE_LIST)
+    public boolean updateById(Notice notice) {
+        notice.setUpdateTime(new Date());
+        return noticeMapper.updateById(notice) > 0;
+    }
 }

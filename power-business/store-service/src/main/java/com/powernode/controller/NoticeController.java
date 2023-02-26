@@ -51,4 +51,12 @@ public class NoticeController {
         Notice notice = noticeService.getById(noticeId);
         return ResponseEntity.ok(notice);
     }
+
+    @ApiOperation("修改公告内容")
+    @PutMapping
+    @PreAuthorize("hasAuthority('shop:notice:update')")
+    public ResponseEntity<Void> updateNotice(@RequestBody Notice notice) {
+        noticeService.updateById(notice);
+        return ResponseEntity.ok().build();
+    }
 }
