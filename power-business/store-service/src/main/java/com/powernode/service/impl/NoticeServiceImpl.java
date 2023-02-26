@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -51,5 +52,11 @@ public class NoticeServiceImpl extends ServiceImpl<NoticeMapper, Notice> impleme
     public boolean updateById(Notice notice) {
         notice.setUpdateTime(new Date());
         return noticeMapper.updateById(notice) > 0;
+    }
+
+    @Override
+    @CacheEvict(key = NoticeConstant.FRONT_NOTICE_LIST)
+    public boolean removeById(Serializable id) {
+        return noticeMapper.deleteById(id) > 0;
     }
 }
