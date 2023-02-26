@@ -44,5 +44,11 @@ public class NoticeController {
         return ResponseEntity.ok().build();
     }
 
-
+    @ApiOperation("根据标识查询公告详情")
+    @GetMapping("info/{noticeId}")
+    @PreAuthorize("hasAuthority('shop:notice:info')")
+    public ResponseEntity<Notice> loadNoticeInfo(@PathVariable Long noticeId) {
+        Notice notice = noticeService.getById(noticeId);
+        return ResponseEntity.ok(notice);
+    }
 }
