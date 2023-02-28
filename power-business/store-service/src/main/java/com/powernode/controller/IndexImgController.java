@@ -36,4 +36,12 @@ public class IndexImgController {
         indexImgService.save(indexImg);
         return ResponseEntity.ok().build();
     }
+
+    @ApiOperation("根据标识查询轮播图详情")
+    @GetMapping("info/{indexImgId}")
+    @PreAuthorize("hasAuthority('admin:indexImg:info')")
+    public ResponseEntity<IndexImg> loadIndexImgInfo(@PathVariable Long indexImgId) {
+        IndexImg indexImg = indexImgService.getById(indexImgId);
+        return ResponseEntity.ok(indexImg);
+    }
 }

@@ -87,4 +87,11 @@ public class ProdController {
         prodService.removeByIds(prodIds);
         return ResponseEntity.ok().build();
     }
+
+    //////////////////////跨服务远程接口调用///////////////////////////
+
+    @GetMapping("getProdById")
+    Prod getProdById(@RequestParam Long id) {
+        return prodService.getById(id);
+    }
 }

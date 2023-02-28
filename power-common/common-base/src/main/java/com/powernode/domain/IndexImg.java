@@ -13,11 +13,10 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
+ * 主页轮播图
  * @author wangjunchen
  */
-/**
-    * 主页轮播图
-    */
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -89,6 +88,18 @@ public class IndexImg implements Serializable {
      */
     @TableField(value = "`type`")
     private Integer type;
+
+    ////////////////////查询轮播图详情时获取商品名称和图片地址///////////////////////////
+    /**
+     * 商品图片
+     */
+    @TableField(exist = false)
+    private String pic;
+    /**
+     * 商品名称
+     */
+    @TableField(exist = false)
+    private String prodName;
 
     private static final long serialVersionUID = 1L;
 }
