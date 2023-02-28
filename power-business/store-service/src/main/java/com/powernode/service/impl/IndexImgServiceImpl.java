@@ -70,4 +70,18 @@ public class IndexImgServiceImpl extends ServiceImpl<IndexImgMapper, IndexImg> i
 
         return indexImg;
     }
+
+    @Override
+    @CacheEvict(key = IndexImgConstant.FRONT_INDEX_IMG_LIST)
+    public boolean updateById(IndexImg indexImg) {
+        //获取状态,状态为1 代表可用，添加上传时间，0表示禁用，不用上传
+        if (1 == indexImg.getStatus()) {
+            indexImg.setUploadTime(new Date());
+        }
+        //判断类型是否为-1，若为-1则relation为-1
+        if (indexImg.getType() == -1) {
+            indexImg.setRelation(-1L);
+        }
+        return indexImgMapper.updateById(indexImg) > 0;
+    }
 }
