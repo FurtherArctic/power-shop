@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Date;
 
 /**
@@ -84,4 +85,11 @@ public class IndexImgServiceImpl extends ServiceImpl<IndexImgMapper, IndexImg> i
         }
         return indexImgMapper.updateById(indexImg) > 0;
     }
+
+    @Override
+    @CacheEvict(key = IndexImgConstant.FRONT_INDEX_IMG_LIST)
+    public boolean removeByIds(Collection<? extends Serializable> idList) {
+        return indexImgMapper.deleteBatchIds(idList) == idList.size();
+    }
+
 }

@@ -5,11 +5,12 @@ import com.powernode.domain.IndexImg;
 import com.powernode.service.IndexImgService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @author wangjunchen
@@ -18,7 +19,7 @@ import javax.annotation.Resource;
 @RequestMapping("admin/indexImg")
 @RestController
 public class IndexImgController {
-    @Resource
+    @Autowired
     private IndexImgService indexImgService;
 
     @ApiOperation("多条件查询轮播图列表")
@@ -50,6 +51,14 @@ public class IndexImgController {
     @PreAuthorize("hasAuthority('admin:indexImg:update')")
     public ResponseEntity<Void> updateIndexImg(@RequestBody IndexImg indexImg) {
         indexImgService.updateById(indexImg);
+        return ResponseEntity.ok().build();
+    }
+
+    @ApiOperation("批量删除轮播图")
+    @DeleteMapping
+    @PreAuthorize("hasAuthority('admin:indexImg:delete')")
+    public ResponseEntity<Void> deleteIndexImg(@RequestBody List<Long> imgIds) {
+        indexImgService.removeByIds(imgIds);
         return ResponseEntity.ok().build();
     }
 }
