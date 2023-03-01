@@ -36,9 +36,9 @@ public class ProdCommServiceImpl extends ServiceImpl<ProdCommMapper, ProdComm> i
     public Page<ProdComm> selectProdCommPage(Page<ProdComm> page, ProdComm prodComm) {
         //获取查询条件商品名称
         String prodName = prodComm.getProdName();
-        //判断商品名称文本框是否有值
+        //判断商品名称是否有值
         List<Long> prodIdList = null;
-        List<Prod> prodList;
+        List<Prod> prodList = null;
         if (StringUtils.hasText(prodName)) {
             //有值：根据商品名称模糊查询商品集合
             prodList = prodMapper.selectList(new LambdaQueryWrapper<Prod>()
@@ -51,6 +51,7 @@ public class ProdCommServiceImpl extends ServiceImpl<ProdCommMapper, ProdComm> i
             //获取商品id集合
             prodIdList = prodList.stream().map(Prod::getProdId).collect(Collectors.toList());
         }
+
         //分页查询商品评论
         page = prodCommMapper.selectPage(page, new LambdaQueryWrapper<ProdComm>()
                 .eq(ObjectUtil.isNotEmpty(prodComm.getStatus()), ProdComm::getStatus, prodComm.getStatus())
@@ -69,6 +70,7 @@ public class ProdCommServiceImpl extends ServiceImpl<ProdCommMapper, ProdComm> i
             prodCommList.forEach(prodComm1 -> {
                 //从商品集合中过滤出与当前评论中的商品一致的商品对象
                 Prod prod1 = prods.stream().filter(prod -> prod.getProdId().equals(prodComm1.getProdId())).collect(Collectors.toList()).get(0);
+                //当评论存在，但是商品被删除的时候会出现异常，即通过评论中的商品id查询对应的商品名称时无法查询到
                 prodComm1.setProdName(prod1.getProdName());
             });
         }
