@@ -11,7 +11,7 @@ spring:
         #指定远程配置中心参数
         git:
           #远程配置中心仓库
-          uri: https://gitee.com/LimYoona530/mini-shop-config2213.git
+          uri: https://gitee.com/LimYoona530/mini-shop-config.git
           #远程仓库登录用户名
           username: 18654836031
           #远程仓库登录密码
@@ -20,7 +20,7 @@ spring:
           basedir: F:\Projects\java\powernode2213\shop-local-config #缓存到本地配置文件的地址
 
   rabbitmq:
-    host: 192.168.110.133
+    host: 192.168.137.100
     port: 5672
     username: shop
     password: 123456
